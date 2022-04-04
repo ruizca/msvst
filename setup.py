@@ -1,5 +1,5 @@
 import os
-from subprocess import check_output
+from subprocess import call
 
 from setuptools import setup
 from setuptools.command.install import install
@@ -12,11 +12,10 @@ class CustomInstall(install, object):
         os.environ["CC"] = "gcc"
         os.environ["CXX"] = "g++"
         os.makedirs("build", exist_ok=True)
-        check_output(["cmake", "-H.", "-Bbuild"])
-        check_output(["make", "-Cbuild"])
-        check_output(["make", "-Cbuild", "install"])
+        call(["cmake", "-H.", "-Bbuild"])
+        call(["make", "-Cbuild"])
+        call(["make", "-Cbuild", "install"])
         super(CustomInstall, self).run()
-
 
 setup(
     name="msvst",
