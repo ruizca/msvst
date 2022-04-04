@@ -1,6 +1,8 @@
 MSVST
 =======
-The Multi-Scale Variance Stabilization Transform (MSVST, Starck et al. 2009) is a denoising algorithm based on wavelets suited for astronomical images. Here we provide a C++ implementation of the 2D and 2D+1D versions of the algorithm along with a python wrapper for ease of use.
+The Multi-Scale Variance Stabilization Transform (MSVST, [Starck et al. 2009](https://arxiv.org/abs/0904.3299)) is a denoising algorithm based on wavelets suited for astronomical images. Here we provide a C++ implementation of the 2D and 2D+1D versions of the algorithm along with a python wrapper for ease of use.
+
+The original C++ code was developed by CEA Saclay and distributed within the [Sparse2D](https://github.com/CosmoStat/Sparse2D) library.
 
 
 Installation
@@ -19,7 +21,7 @@ If available, the library will use OpenMPI for parallelization in multi-core sys
 
 Once the prerequisites are installed:
 ```
-git clone 
+git clone git@github.com:ruizca/msvst.git
 cd msvst
 python setup.py install
 ```
