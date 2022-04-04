@@ -36,5 +36,6 @@ build
 msvst/bin
 msvst/lib
 msvst/include
+*.egg-info
 
 .vscode
