@@ -58,13 +58,13 @@ class MSVST2D(MSVST):
             3: zero.
         sigma_level : int or float
             Equivalent Gauss-detection level.
-        fdr_setting : 0 or 1, optional
-            Manual FDR setting
-            0/1 = independence/dependence of coefficients. Default is 1.
-        scalexy : int, optional
-            Number of scales for the wavelet transformation, by default 5.
-        first_scalexy : int, optional
+        fdr_indep : bool, optional
+            Manual FDR setting. True if FDR coefficients are independent,
+            by default False.
+        min_scalexy : int, optional
             First detection scale, by default 1.
+        max_scalexy : int, optional
+            Number of scales for the wavelet transformation, by default 5.
         iteration_mode : 0 or 1, optional
             Iteration modes
             0: Direct iterative mode.
@@ -74,14 +74,14 @@ class MSVST2D(MSVST):
         use_non_default_filter : bool, optional
             If True, use g=Id-h*h as iteration band-pass filter. 
             By default False.
-        correct_vst_bias : bool, optional
+        bias_correction : bool, optional
             If True, correct the VST's bias. By default True.
         positivity_projection : bool, optional
             If True, apply positivity projection. By default True.
-        ignore_last_approx : bool, optional
+        kill_last : bool, optional
             If True, ignore the last approximation band 
             (used with iteration). By default False.
-        only_positive_coeff : bool, optional
+        detpos : bool, optional
             If True, detect only the positive coefficients
             (used with iteration). By default False.
         save_snr_output : bool, optional
@@ -119,21 +119,24 @@ class MSVST2D(MSVST):
         args_values = {
             "threshold_probability": ["E", 0.000465],
             "sigma_level": ["s", None],
-            "fdr_setting": ["c", 1],
-            "scalexy": ["n", 5],
-            "first_scalexy": ["F", 1],
+            "max_scalexy": ["n", 5],
+            "min_scalexy": ["F", 1],
             "iteration_mode": ["I", 1],
             "iterations": ["i", 10],
             "border_mode": ["B", 1],
         }
         args_flags = {
             "use_non_default_filter": "T",
-            "ignore_last_approx": "K",
-            "only_positive_coeff": "p",
+            "kill_last": "K",
+            "detpos": "p",
             "save_snr_output": "Q",
             "verbose": "v",
         }
         args = []
+
+        fdr_indep = kwargs.pop("fdr_indep", False)
+        fdr_setting = 0 if fdr_indep else 1
+        args.append(f"-c{fdr_setting}")
 
         threshold_mode = kwargs.pop("threshold_mode", 0)
         args.append(f"-M{threshold_mode}")
@@ -151,7 +154,7 @@ class MSVST2D(MSVST):
             if user_value:
                 args.append(f"-{flag}")
 
-        correct_vst_bias = kwargs.pop("correct_vst_bias", True)
+        correct_vst_bias = kwargs.pop("bias_correction", True)
         if not correct_vst_bias:
             args.append("-b")
 
@@ -194,16 +197,16 @@ class MSVST2D1D(MSVST):
             3: zero.
         sigma_level : int or float
             Equivalent Gauss-detection level.
-        fdr_setting : 0 or 1, optional
-            Manual FDR setting
-            0/1 = independence/dependence of coefficients. Default is 1.
-        scalexy : int, optional
+        fdr_indep : bool, optional
+            Manual FDR setting. True if FDR coefficients are independent,
+            by default False.
+        max_scalexy : int, optional
             Number of scales for the 2D wavelet transformation, by default 3.
-        first_scalexy : int, optional
+        min_scalexy : int, optional
             First detection scale in 2D, by default 1.
-        scalez : int, optional
+        max_scalez : int, optional
             Number of scales for the 1D wavelet transformation, by default 5.
-        first_scalez : int, optional
+        min_scalez : int, optional
             First detection scale in 1D, by default 1.
         iteration_mode : 0 or 1, optional
             Iteration modes
@@ -214,10 +217,10 @@ class MSVST2D1D(MSVST):
         use_non_default_filter : bool, optional
             If True, use g=Id-h*h as iteration band-pass filter. 
             By default False.
-        ignore_last_approx : bool, optional
+        kill_last : bool, optional
             If True, ignore the last approximation band 
             (used with iteration). By default False.
-        only_positive_coeff : bool, optional
+        detpos : bool, optional
             If True, detect only the positive coefficients
             (used with iteration). By default False.
         verbose : bool, optional
@@ -243,11 +246,10 @@ class MSVST2D1D(MSVST):
         args_values = {
             "threshold_probability": ["E", 0.000465],
             "sigma_level": ["s", None],
-            "fdr_setting": ["c", 1],
-            "scalexy": ["n", 3],
-            "scalez": ["N", 5],
-            "first_scalexy": ["F", 1],
-            "first_scalez": ["f", 1],
+            "max_scalexy": ["n", 3],
+            "max_scalez": ["N", 5],
+            "min_scalexy": ["F", 1],
+            "min_scalez": ["f", 1],
             "iteration_mode": ["I", 1],
             "iterations": ["i", 10],
             "snr_files_prefix": ["Q", None],
@@ -255,11 +257,15 @@ class MSVST2D1D(MSVST):
         }
         args_flags = {
             "use_non_default_filter": "T",
-            "ignore_last_approx": "K",
-            "only_positive_coeff": "p",
+            "kill_last": "K",
+            "detpos": "p",
             "verbose": "v",
         }
         args = []
+
+        fdr_indep = kwargs.pop("fdr_indep", False)
+        fdr_setting = 0 if fdr_indep else 1
+        args.append(f"-c{fdr_setting}")
 
         threshold_mode = kwargs.pop("threshold_mode", 0)
         args.append(f"-M{threshold_mode}")
