@@ -17,17 +17,27 @@ endfunction()
 
 # Extract target names from source files
 function(find_targets targets target_path ext)
-  file(GLOB src_targets "${PROJECT_SOURCE_DIR}/${target_path}/*.${ext}")
-  list(TRANSFORM src_targets REPLACE "${PROJECT_SOURCE_DIR}/${target_path}/" "")
+  file(GLOB src_targets "${sparse2d_SOURCE_DIR}/${target_path}/*.${ext}")
+  list(TRANSFORM src_targets REPLACE "${sparse2d_SOURCE_DIR}/${target_path}/" "")
   list(TRANSFORM src_targets REPLACE ".${ext}" "")
   set(${targets} "${src_targets}" PARENT_SCOPE)
 endfunction()
 
 # Build library
 function(build_lib library)
-  file(GLOB src_${library} "${PROJECT_SOURCE_DIR}/src/lib${library}/*.cc")
-  file(GLOB inc_${library} "${PROJECT_SOURCE_DIR}/src/lib${library}/*.h")
-  include_directories("${PROJECT_SOURCE_DIR}/src/lib${library}")
+  file(GLOB src_${library} "${sparse2d_SOURCE_DIR}/src/msvst/lib${library}/*.cc")
+  file(GLOB inc_${library} "${sparse2d_SOURCE_DIR}/src/msvst/lib${library}/*.h")
+  include_directories("${sparse2d_SOURCE_DIR}/src/msvst/lib${library}")
+  add_library(${library} STATIC ${src_${library}})
+  target_link_libraries(${library} ${CFITSIO_LIBRARIES})
+  INSTALL(FILES ${inc_${library}} DESTINATION include/msvst)
+endfunction()
+
+# Build library with path
+function(build_pathlib library path)
+  file(GLOB src_${library} "${sparse2d_SOURCE_DIR}/src/${path}/lib${library}/*.cc")
+  file(GLOB inc_${library} "${sparse2d_SOURCE_DIR}/src/${path}/lib${library}/*.h")
+  include_directories("${sparse2d_SOURCE_DIR}/src/${path}/lib${library}")
   add_library(${library} STATIC ${src_${library}})
   target_link_libraries(${library} ${CFITSIO_LIBRARIES})
   INSTALL(FILES ${inc_${library}} DESTINATION include/msvst)
@@ -35,6 +45,6 @@ endfunction()
 
 # Build binary
 function(build_bin program libs target_path ext)
-  add_executable(${program} "${PROJECT_SOURCE_DIR}/${target_path}/${program}.${ext}")
+  add_executable(${program} "${sparse2d_SOURCE_DIR}/${target_path}/${program}.${ext}")
   target_link_libraries(${program} ${CFITSIO_LIBRARIES} ${libs})
 endfunction()

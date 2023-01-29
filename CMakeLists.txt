@@ -51,18 +51,25 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
 # MSVST #
 # ------#
 
+include(FetchContent)
+FetchContent_Declare(
+  Sparse2D
+  GIT_REPOSITORY https://github.com/CosmoStat/Sparse2D.git
+)
+FetchContent_Populate(Sparse2D)
+message(STATUS ${sparse2d_SOURCE_DIR})
+
 # Build MSVST lib
 set(msvst_libs msvst tools)
-foreach(library ${msvst_libs})
-  build_lib(${library})
-endforeach()
+build_pathlib(msvst msvst)
+build_pathlib(tools sparse)
 
 # Find all MSVST targets
-find_targets(msvst_targets src/msvst cc)
+find_targets(msvst_targets src/msvst/msvstmain cc)
 
 # Build binaries
 foreach(program ${msvst_targets})
-  build_bin(${program} "${msvst_libs}" src/msvst cc)
+  build_bin(${program} "${msvst_libs}" src/msvst/msvstmain cc)
 endforeach(program)
 
 # Install libraries

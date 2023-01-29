@@ -260,6 +260,7 @@ class MSVST2D1D(MSVST):
             "kill_last": "K",
             "detpos": "p",
             "verbose": "v",
+            "varmodcorr": "S",
         }
         args = []
 
