@@ -1,12 +1,13 @@
 import os
+from pathlib import Path
 from subprocess import call
 
 from setuptools import setup
-from setuptools.command.install import install
+from setuptools.command.build_py import build_py
 
 
-class CustomInstall(install, object):
-    """Custom handler for the 'install' command."""
+class CustomBuild(build_py):
+    """Custom handler for the 'build_py' command."""
 
     def run(self):
         os.environ["CC"] = "gcc"
@@ -15,13 +16,18 @@ class CustomInstall(install, object):
         call(["cmake", "-H.", "-Bbuild"])
         call(["make", "-Cbuild"])
         call(["make", "-Cbuild", "install"])
-        super(CustomInstall, self).run()
+        super(CustomBuild, self).run()
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="msvst",
     version="1.0",
     license='CeCILL',
     description='Multi-Scale Variance Stabilization Transform',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Angel Ruiz',
     author_email='angel.ruizca@gmail.com',
     url="https://github.com/ruizca/msvst",
@@ -29,7 +35,7 @@ setup(
     package_dir={"msvst": "msvst/"},
     package_data={"msvst": ["bin/*"]},
     include_package_data=True,
-    cmdclass={"install": CustomInstall},
+    cmdclass={"build_py": CustomBuild},
     classifiers=[
         "Intended Audience :: Science/Research",
         "Topic :: Scientific/Engineering :: Astronomy",
