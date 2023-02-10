@@ -7,21 +7,19 @@ The original C++ code was developed by CEA Saclay and distributed within the [Sp
 
 Installation
 -------------
-This can be installed as a python package. However, for the compilation of the C++ code the following software and libraries should be available in your system: 
-- C/C++ compiler
+MSVST is distributed as a python package an can be installed via pip. However, for the compilation of the C++ code the following software and libraries should be available in your system: 
+- C/C++ compiler and make
 - [CMake](http://www.cmake.org)
 - [CFITSIO](https://heasarc.gsfc.nasa.gov/fitsio/) (>V3.31)
 - [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
 
-In Ubuntu (and other Debian based linux distributions) these dependencies can be installed via apt:
+In Ubuntu (and other Debian based Linux distributions) these dependencies can be installed via apt:
 ```
-sudo apt install gcc cmake libcfitsio* pkg-config
+sudo apt install gcc make cmake libcfitsio* pkg-config
 ```
-If available, the library will use OpenMPI for parallelization in multi-core systems.
+If available, the MSVST library will use [OpenMPI](https://www.open-mpi.org/) for parallelization in multi-core systems.
 
 Once the prerequisites are installed:
 ```
-git clone git@github.com:ruizca/msvst.git
-cd msvst
-python setup.py install
+pip install msvst
 ```
